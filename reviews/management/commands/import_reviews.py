@@ -1,17 +1,14 @@
 import datetime
-
 import requests
 from django.core.management import BaseCommand
 from django.utils.timezone import make_aware
-
-from reviews.models import Review
-from users.models import User
+from reviews.models import Review, User
 
 URL = 'https://raw.githubusercontent.com/stepik-a-w/drf-project-boxes/master/reviews.json'
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **options):
+    def handle(self, *args, **kwargs):
         response = requests.get(url=URL).json()
         for review in response:
             try:

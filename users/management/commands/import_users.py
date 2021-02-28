@@ -1,6 +1,6 @@
-from django.core.management import BaseCommand
-from users.models import User
 import requests
+from users.models import User
+from django.core.management import BaseCommand
 
 URL = 'https://raw.githubusercontent.com/stepik-a-w/drf-project-boxes/master/recipients.json'
 
@@ -19,7 +19,5 @@ class Command(BaseCommand):
                 middle_name=user['info']['patronymic'],
                 phone=user['contacts']['phoneNumber'],
                 address=user['city_kladr']
-
             )
-
         return
