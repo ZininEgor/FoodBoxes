@@ -1,9 +1,10 @@
 import requests
-from items.models import Item
 from urllib.request import urlopen
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.core.management import BaseCommand
+
+from items.models import Item
 
 URL = 'https://raw.githubusercontent.com/stepik-a-w/drf-project-boxes/master/foodboxes.json'
 

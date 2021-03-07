@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from carts.models import Cart
+
 
 class User(AbstractUser):
     middle_name = models.CharField(
@@ -14,3 +16,8 @@ class User(AbstractUser):
     address = models.CharField(
         max_length=64
     )
+
+    @property
+    def get_or_create_cart(self):
+        cart, _ = Cart.objects.get_or_create(user=self)
+        return cart

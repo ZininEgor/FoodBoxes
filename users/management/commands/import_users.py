@@ -1,6 +1,7 @@
 import requests
-from users.models import User
 from django.core.management import BaseCommand
+
+from users.models import User
 
 URL = 'https://raw.githubusercontent.com/stepik-a-w/drf-project-boxes/master/recipients.json'
 
