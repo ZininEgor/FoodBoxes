@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from users.views import CreateUserView, UserView
+from users.views import CreateUserView, UserViewSet
 
 authpatterns = [
     path('login/', obtain_auth_token),
@@ -10,9 +10,5 @@ authpatterns = [
 
 urlpatterns = [
     path('auth/', include(authpatterns)),
-    path('current/', UserView.as_view({
-        'get': 'retrieve',
-        'put': 'update',
-        'patch': 'partial_update',
-    })),
+    path('current/', UserViewSet.as_view()),
 ]

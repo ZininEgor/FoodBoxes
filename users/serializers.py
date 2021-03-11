@@ -17,12 +17,15 @@ class UserSerializer(serializers.ModelSerializer):
             'phone',
             'address',
         )
+        read_only_fields = (
+            'username',
+        )
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],
-            username=validated_data['username'],
+            username=validated_data['email'].split("@")[0].strip(),
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             middle_name=validated_data['middle_name'],
@@ -34,12 +37,8 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        instance.set_email(validated_data['email'])
-        instance.set_first_name(validated_data['first_name'])
-        instance.set_last_name(validated_data['last_name'])
-        instance.set_middle_name(validated_data['middle_name'])
+        instance = super().update(instance, validated_data)
         instance.set_password(validated_data['password'])
-        instance.set_phone(validated_data['phone'])
-        instance.set_address(validated_data['address'])
+        instance.save()
         instance.save()
         return instance

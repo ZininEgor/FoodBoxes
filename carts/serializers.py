@@ -67,7 +67,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         cart_item = CartItem(
             item=validated_data['item'],
-            cart=self.context['request'].user.get_or_create_cart,
+            cart=self.context['request'].user.current_cart,
             quantity=validated_data['quantity'],
             price=validated_data['item'].price,
         )
@@ -83,5 +83,5 @@ class CartSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'items',
-            'total_coast',
+            'total_cost',
         )

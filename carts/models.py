@@ -20,6 +20,13 @@ class CartItem(models.Model):
         decimal_places=2,
     )
 
+    def save(self, *args, **kwargs):
+        cart_items = CartItem.objects.all()
+        for cart_item in cart_items:
+            if self.item == cart_item.item and self.cart == cart_item.cart:
+                return
+        super().save(*args, **kwargs)
+
     @property
     def total_price(self):
         return self.price * self.quantity
@@ -37,6 +44,5 @@ class Cart(models.Model):
     )
 
     @property
-    def total_coast(self):
-        total_price_list = map(lambda item: item.total_price, self.cart_items.all())
-        return sum(total_price_list)
+    def total_cost(self):
+        return sum([x.total_price for x in self.cart_items.all()])

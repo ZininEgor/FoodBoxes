@@ -14,4 +14,4 @@ class ItemViewSet(ReadOnlyModelViewSet):
     pagination_class = ItemPaginator
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = ItemFilter
-    ordering_fields = ['price']
+    ordering_fields = ['price', 'id']

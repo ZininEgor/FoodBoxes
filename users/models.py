@@ -18,6 +18,6 @@ class User(AbstractUser):
     )
 
     @property
-    def get_or_create_cart(self):
+    def current_cart(self):
         cart, _ = Cart.objects.get_or_create(user=self)
         return cart

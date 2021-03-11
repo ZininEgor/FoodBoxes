@@ -1,43 +1,32 @@
-from rest_framework import mixins, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from carts.models import Cart, CartItem
+from carts.models import Cart
 from carts.paginators import CartItemPaginator
 from carts.serializers import CartSerializer, CartItemSerializer, CartItemUpdateSerializer
 
 
-class CartViewSet(mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
-    queryset = Cart.objects.all()
+class CartViewSet(ReadOnlyModelViewSet):
     serializer_class = CartSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.get_or_create_cart
+        return self.request.user.current_cart
 
 
-class CartITemViewSet(mixins.RetrieveModelMixin,
-                      mixins.UpdateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.CreateModelMixin,
-                      mixins.DestroyModelMixin,
-                      viewsets.GenericViewSet):
+class CartITemViewSet(ModelViewSet):
     pagination_class = CartItemPaginator
-    queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     authentication_classes = [TokenAuthentication]
-
     permission_classes = [IsAuthenticated]
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = CartItemUpdateSerializer(
-            instance=instance,
-            data=request.data
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        if self.action == 'update':
+            return CartItemUpdateSerializer
+        return CartItemSerializer
+
+    def get_queryset(self):
+        queryset = Cart.objects.filter(user=self.request.user).first().cart_items.all()
+        return queryset
