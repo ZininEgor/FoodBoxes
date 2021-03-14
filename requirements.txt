@@ -1,11 +1,13 @@
 asgiref==3.3.1
 astpretty==2.1.0
 attrs==20.3.0
+autopep8==1.5.5
 certifi==2020.12.5
 chardet==4.0.0
 cognitive-complexity==1.2.0
 coreapi==2.3.3
 coreschema==0.0.4
+coverage==5.5
 dateparser==1.0.0
 Django==3.1.7
 django-cors-headers==3.7.0
@@ -60,5 +62,7 @@ sqlparse==0.4.1
 stdlib-list==0.8.0
 toml==0.10.2
 tzlocal==2.1
+unify==0.5
+untokenize==0.1.1
 uritemplate==3.0.1
 urllib3==1.26.3

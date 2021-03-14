@@ -13,7 +13,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'foodboxes.utils.custom_exception_handler',
 }
 
 INSTALLED_APPS = [
@@ -28,10 +29,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+
     'items',
     'reviews',
     'users',
     'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [

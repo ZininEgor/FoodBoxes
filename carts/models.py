@@ -20,12 +20,8 @@ class CartItem(models.Model):
         decimal_places=2,
     )
 
-    def save(self, *args, **kwargs):
-        cart_items = CartItem.objects.all()
-        for cart_item in cart_items:
-            if self.item == cart_item.item and self.cart == cart_item.cart:
-                return
-        super().save(*args, **kwargs)
+    class Meta:
+        unique_together = ('item', 'cart',)
 
     @property
     def total_price(self):
