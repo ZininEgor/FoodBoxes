@@ -26,10 +26,8 @@ class UserCreateTestCase(APITestCase):
     def test(self):
         response = self.client.post(self.url, data=self.data)
         user = User.objects.get()
-        model_dict = model_to_dict(user)
-        [model_dict.pop(key) for key in ['groups', 'user_permissions']]
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(model_dict,
+        self.assertEqual(model_to_dict(user),
                          {'id': user.id,
                           'password': user.password,
                           'last_login': user.last_login,
@@ -43,6 +41,9 @@ class UserCreateTestCase(APITestCase):
                           'date_joined': user.date_joined,
                           'middle_name': self.data['middle_name'],
                           'phone': self.data['phone'],
-                          'address': self.data['address']})
+                          'address': self.data['address'],
+                          'groups': list(user.groups.all()),
+                          'user_permissions': list(user.user_permissions.all()),
+                          })
         self.data.pop('password')
         self.assertEqual(response.json(), {'id': user.id, 'username': user.username, **self.data})

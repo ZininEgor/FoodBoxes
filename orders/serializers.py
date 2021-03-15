@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from carts.serializers import CartSerializer
 from orders.models import Order
+from users.serializers import UserSerializer
 
 
 class OrderRetrieveUpdateSerializer(serializers.ModelSerializer):
@@ -26,18 +27,18 @@ class OrderRetrieveUpdateSerializer(serializers.ModelSerializer):
             'created_at',
         )
 
-    def update(self, instance, validated_data):
-        if instance.status == 'created':
-            instance.status = validated_data.get('status', instance.status)
-            instance.address = validated_data.get('address', instance.address)
-            instance.delivery_at = validated_data.get('delivery_at', instance.delivery_at)
-            instance.save()
-            return instance
-        else:
-            raise serializers.ValidationError(f"It is impossible to change the order as it is {instance.status}")
+    def validate(self, attrs):
+        instance = getattr(self, 'instance', None)
+        if instance.status != Order.StatusOrder.CREATED.value:
+            raise serializers.ValidationError("Impossible to create order without items")
+        return attrs
 
 
 class OrderCreateListSerializer(serializers.ModelSerializer):
+    recipient = UserSerializer(
+        default=serializers.CurrentUserDefault()
+    )
+
     class Meta:
         model = Order
         fields = (
@@ -59,16 +60,18 @@ class OrderCreateListSerializer(serializers.ModelSerializer):
             'cart',
         )
 
-    def create(self, validated_data):
-        if self.context['request'].user.current_cart.total_cost == 0:
+    def validate(self, attrs):
+        if attrs['recipient'].current_cart.total_cost == 0:
             raise serializers.ValidationError("Impossible to create order without items")
+        return attrs
+
+    def create(self, validated_data):
         review = Order(
-            recipient=self.context['request'].user,
+            recipient=validated_data['recipient'],
             address=validated_data['address'],
             delivery_at=validated_data['delivery_at'],
-            cart=self.context['request'].user.current_cart,
-            total_cost=self.context['request'].user.current_cart.total_cost
+            cart=validated_data['recipient'].current_cart,
+            total_cost=self.validated_data['recipient'].current_cart.total_cost
         )
         review.save()
-        self.context['request'].user.create_new_cart()
         return review

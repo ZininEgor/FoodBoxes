@@ -5,7 +5,9 @@ from users.serializers import UserSerializer
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = UserSerializer(
+        default=serializers.CurrentUserDefault()
+    )
 
     class Meta:
         model = Review
@@ -28,11 +30,3 @@ class ReviewSerializer(serializers.ModelSerializer):
                 'required': True
             },
         }
-
-    def create(self, validated_data):
-        review = Review(
-            author=self.context['request'].user,
-            text=validated_data['text'],
-        )
-        review.save()
-        return review

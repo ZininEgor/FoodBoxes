@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from users.models import User
+from foodboxes import settings
 
 
 class Order(models.Model):
@@ -22,7 +22,7 @@ class Order(models.Model):
     )
 
     recipient = models.ForeignKey(
-        to=User,
+        to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='orders',
     )
@@ -34,7 +34,7 @@ class Order(models.Model):
     cart = models.ForeignKey(
         to='carts.Cart',
         on_delete=models.CASCADE,
-        related_name='orders',
+        related_name='order',
     )
 
     status = models.CharField(

@@ -11,7 +11,6 @@ from users.models import User
 
 class ReviewViewSetListTestCase(APITestCase):
     def setUp(self) -> None:
-        self.status = ['new', 'published', 'hidden']
         self.users = [
             User.objects.create(
                 username=f'egor {name}',
@@ -21,7 +20,7 @@ class ReviewViewSetListTestCase(APITestCase):
             Review.objects.create(
                 text=f'text {r}',
                 author=random.choice(self.users),
-                status=random.choice(self.status),
+                status=random.choice([Review.StatusReview]),
             ) for r in range(30)
         ]
 
@@ -45,11 +44,11 @@ class ReviewViewSetListTestCase(APITestCase):
                     'phone': review.author.phone,
                     'address': review.author.address,
                 },
-                'status': review.status,
+                'status': review.StatusReview.PUBLISHED,
                 'text': review.text,
                 'created_at': serializers.DateTimeField().to_representation(review.created_at),
                 'published_at': review.published_at
-            } for review in self.reviews if review.status == 'published']
+            } for review in self.reviews if review.status == Review.StatusReview.PUBLISHED]
         )
 
 
@@ -86,7 +85,7 @@ class ReviewViewSetCreateTestCase(APITestCase):
                 'phone': self.user.phone,
                 'address': self.user.address,
             },
-            'status': review.status,
+            'status': review.StatusReview.MODERATION.value,
             'text': review.text,
             'created_at': serializers.DateTimeField().to_representation(review.created_at),
             'published_at': review.published_at

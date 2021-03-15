@@ -10,8 +10,6 @@ from orders import serializers
 class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                    mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
-    queryset = Order.objects.all()
-    serializer_class = serializers.OrderCreateListSerializer
     pagination_class = OrderPaginator
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

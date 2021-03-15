@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.forms import model_to_dict
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -40,7 +41,7 @@ class UserViewSetUpdateTestCase(APITestCase):
     maxDiff = None
 
     def setUp(self) -> None:
-        self.user = User.objects.create(username='egor', password='admin123123')
+        self.user = User.objects.create(username='egor', password=make_password('admin123123'))
 
     @classmethod
     def setUpTestData(cls):
