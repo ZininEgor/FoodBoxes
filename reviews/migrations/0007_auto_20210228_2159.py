@@ -13,6 +13,15 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='review',
             name='status',
-            field=models.CharField(choices=[('new', 'на модерации'), ('published', 'опубликован'), ('hidden', 'отклонен')], default='new', max_length=13),
+            field=models.CharField(
+                choices=[
+                    ('new',
+                     'на модерации'),
+                    ('published',
+                     'опубликован'),
+                    ('hidden',
+                     'отклонен')],
+                default='new',
+                max_length=13),
         ),
     ]

@@ -1,4 +1,4 @@
-# FoodBoxes
+## FoodBoxes
 0) git clone https://github.com/ZininEgor/FoodBoxes/tree/dev
 1) pip install -r requirements.txt
 2) python manage.py migrate

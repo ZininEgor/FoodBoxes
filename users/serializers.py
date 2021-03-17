@@ -1,9 +1,15 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 
 from users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True
+    )
+
     class Meta:
         model = User
         fields = (
@@ -15,30 +21,26 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'middle_name',
             'phone',
+            'address'
+        )
+        read_only_fields = ('username',)
+
+    def validated_password(self, value):
+        validate_password(value)
+        return make_password(value)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'phone',
             'address',
         )
-        read_only_fields = (
-            'username',
-        )
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['email'].split("@")[0].strip(),
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            middle_name=validated_data['middle_name'],
-            phone=validated_data['phone'],
-            address=validated_data['address'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
-    def update(self, instance, validated_data):
-        instance = super().update(instance, validated_data)
-        instance.set_password(validated_data['password'])
-        instance.save()
-        instance.save()
-        return instance
+        read_only_fields = ('username',)

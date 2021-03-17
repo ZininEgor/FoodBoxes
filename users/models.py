@@ -19,5 +19,10 @@ class User(AbstractUser):
 
     @property
     def current_cart(self):
-        cart, _ = Cart.objects.get_or_create(user=self)
+        cart, _ = Cart.objects.filter(order__isnull=True).get_or_create(user=self)
         return cart
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email.split("@", 1)[0]
+        return super().save(*args, **kwargs)

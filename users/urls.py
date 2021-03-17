@@ -5,10 +5,10 @@ from users.views import CreateUserView, UserViewSet
 
 authpatterns = [
     path('login/', obtain_auth_token),
-    path('register/', CreateUserView.as_view())
+    path('register/', CreateUserView.as_view(), name='register')
 ]
 
 urlpatterns = [
     path('auth/', include(authpatterns)),
-    path('current/', UserViewSet.as_view()),
+    path('current/', UserViewSet.as_view(), name='current'),
 ]
