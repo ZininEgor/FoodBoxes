@@ -20,5 +20,5 @@ class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
         return serializers.OrderRetrieveUpdateSerializer
 
     def get_queryset(self):
-        queryset = Order.objects.filter(recipient=self.request.user).all()
+        queryset = Order.objects.filter(recipient=self.request.user)
         return queryset

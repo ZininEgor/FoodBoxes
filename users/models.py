@@ -19,7 +19,7 @@ class User(AbstractUser):
 
     @property
     def current_cart(self):
-        cart, _ = Cart.objects.filter(order=False).get_or_create(user=self)
+        cart, _ = Cart.objects.filter(order__isnull=True).get_or_create(user=self)
         return cart
 
     def save(self, *args, **kwargs):

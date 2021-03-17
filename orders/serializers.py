@@ -30,7 +30,7 @@ class OrderRetrieveUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         instance = getattr(self, 'instance', None)
         if instance.status != Order.StatusOrder.CREATED.value:
-            raise serializers.ValidationError("Impossible to create order without items")
+            raise serializers.ValidationError("Impossible to change this item")
         return attrs
 
 
@@ -66,12 +66,12 @@ class OrderCreateListSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        review = Order(
+        order = Order(
             recipient=validated_data['recipient'],
             address=validated_data['address'],
             delivery_at=validated_data['delivery_at'],
             cart=validated_data['recipient'].current_cart,
             total_cost=self.validated_data['recipient'].current_cart.total_cost
         )
-        review.save()
-        return review
+        order.save()
+        return order
