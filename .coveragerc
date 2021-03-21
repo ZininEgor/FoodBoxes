@@ -1,0 +1,16 @@
+[run]
+include = src/*
+command_line = manage.py test
+
+[report]
+omit =
+  */tests/*,
+    *venv/*,
+	*apps.py,
+	*asgi.py
+	*migrations/*,
+	*commands/*
+	*settings/*,
+	*urls.py,
+  *wsgi.py,
+	manage.py

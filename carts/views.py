@@ -28,5 +28,5 @@ class CartITemViewSet(ModelViewSet):
         return CartItemSerializer
 
     def get_queryset(self):
-        queryset = Cart.objects.filter(user=self.request.user).first().cart_items.all()
+        queryset = Cart.objects.select_related('user').prefetch_related('items').filter(user=self.request.user).first().cart_items.all()
         return queryset
