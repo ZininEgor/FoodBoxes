@@ -10,7 +10,6 @@ from reviews.paginators import ReviewPaginator
 class ReviewViewSet(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
                     viewsets.GenericViewSet):
-    queryset = Review.objects.all()
     pagination_class = ReviewPaginator
     authentication_classes = [TokenAuthentication]
     serializer_class = serializers.ReviewSerializer
@@ -20,7 +19,7 @@ class ReviewViewSet(mixins.CreateModelMixin,
     }
 
     def get_queryset(self):
-        queryset = Review.objects.filter(status=Review.StatusReview.PUBLISHED)
+        queryset = Review.objects.select_related('author').filter(status=Review.StatusReview.PUBLISHED)
         return queryset
 
     def get_permissions(self):

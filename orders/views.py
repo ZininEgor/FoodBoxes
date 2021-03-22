@@ -11,8 +11,14 @@ class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                    mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
     pagination_class = OrderPaginator
+
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_throttles(self):
+        if self.request.method.lower() == 'post':
+            self.throttle_scope = 'order'
+        return super(OrderViewSet, self).get_throttles()
 
     def get_serializer_class(self):
         if self.action in ('list', 'create'):
@@ -20,5 +26,5 @@ class OrderViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
         return serializers.OrderRetrieveUpdateSerializer
 
     def get_queryset(self):
-        queryset = Order.objects.filter(recipient=self.request.user)
+        queryset = Order.objects.select_related('recipient', 'cart').filter(recipient=self.request.user)
         return queryset

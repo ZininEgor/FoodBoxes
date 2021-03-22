@@ -34,6 +34,7 @@ class UserViewSetRetrieveTestCase(APITestCase):
             'middle_name': self.user.middle_name,
             'phone': self.user.phone,
             'address': self.user.address,
+
         })
 
 
@@ -72,22 +73,24 @@ class UserViewSetUpdateTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'id': user.id, 'username': user.username, **data})
         model_dict = model_to_dict(user)
-        [model_dict.pop(key) for key in ['groups', 'user_permissions']]
-        self.assertEqual(model_dict,
-                         {'id': user.id,
-                          'password': user.password,
-                          'last_login': user.last_login,
-                          'is_superuser': user.is_superuser,
-                          'username': user.username,
-                          'first_name': data['first_name'],
-                          'last_name': data['last_name'],
-                          'email': data['email'],
-                          'is_staff': user.is_staff,
-                          'is_active': user.is_active,
-                          'date_joined': user.date_joined,
-                          'middle_name': data['middle_name'],
-                          'phone': data['phone'],
-                          'address': data['address']})
+        self.assertEqual(model_dict, {
+            'id': user.id,
+            'password': user.password,
+            'last_login': user.last_login,
+            'is_superuser': user.is_superuser,
+            'username': user.username,
+            'first_name': data['first_name'],
+            'last_name': data['last_name'],
+            'email': data['email'],
+            'is_staff': user.is_staff,
+            'is_active': user.is_active,
+            'date_joined': user.date_joined,
+            'middle_name': data['middle_name'],
+            'phone': data['phone'],
+            'address': data['address'],
+            'groups': list(user.groups.all()),
+            'user_permissions': list(user.user_permissions.all()),
+        })
 
     def test_patch(self):
         data = {
@@ -104,19 +107,21 @@ class UserViewSetUpdateTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'id': user.id, 'username': user.username, **data})
         model_dict = model_to_dict(user)
-        [model_dict.pop(key) for key in ['groups', 'user_permissions']]
-        self.assertEqual(model_dict,
-                         {'id': user.id,
-                          'password': user.password,
-                          'last_login': user.last_login,
-                          'is_superuser': user.is_superuser,
-                          'username': user.username,
-                          'first_name': data['first_name'],
-                          'last_name': data['last_name'],
-                          'email': data['email'],
-                          'is_staff': user.is_staff,
-                          'is_active': user.is_active,
-                          'date_joined': user.date_joined,
-                          'middle_name': data['middle_name'],
-                          'phone': data['phone'],
-                          'address': data['address']})
+        self.assertEqual(model_dict, {
+            'id': user.id,
+            'password': user.password,
+            'last_login': user.last_login,
+            'is_superuser': user.is_superuser,
+            'username': user.username,
+            'first_name': data['first_name'],
+            'last_name': data['last_name'],
+            'email': data['email'],
+            'is_staff': user.is_staff,
+            'is_active': user.is_active,
+            'date_joined': user.date_joined,
+            'middle_name': data['middle_name'],
+            'phone': data['phone'],
+            'address': data['address'],
+            'groups': list(user.groups.all()),
+            'user_permissions': list(user.user_permissions.all()),
+        })

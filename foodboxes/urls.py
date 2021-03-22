@@ -18,7 +18,7 @@ apipatterns = [
     path('users/', include(('users.urls', 'users'), namespace='users')),
     path('reviews/', include(('reviews.urls', 'reviews'), namespace='reviews')),
     path('order/', include(('orders.urls', 'orders'), namespace='orders')),
-    path('carts/', include('carts.urls')),
+    path('carts/', include(('carts.urls', 'carts'), namespace='carts')),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0)),  # noqa
 ]
 
